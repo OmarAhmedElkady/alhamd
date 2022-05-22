@@ -135,6 +135,7 @@
         <script src="{{ URL::asset('assets/admin/dashboard_files/js/custom/image_preview.js') }}"></script>
         <script src="{{ URL::asset('assets/admin/dashboard_files/js/custom/order.js') }}"></script>
 
+
         <script>
             $(document).ready(function () {
 
@@ -194,5 +195,7 @@
         </script>
         @stack('scripts')
         @yield('scripts')
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
     </body>
 </html>

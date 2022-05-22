@@ -202,12 +202,12 @@ class OrderController extends Controller
                                     $store = $product->store - $quantity['quantity'] ;
 
                                     // Update the quantity in stock to the new quantity
-                                    $newProduct = Product::where('translation_of' , $product_translation_of)->update(['store' => $store]) ;
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => $store]) ;
 
                                 }   else    {  // If the quantity requested by the pharmacist is greater than the quantity in stock
 
                                     // Update the quantity in stock to the new quantity
-                                    $newProduct = Product::where('translation_of' , $product_translation_of)->update(['store' => 0]) ;
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => 0]) ;
                                 }
                             }   //  End If
                         }   //  End Of Foreach

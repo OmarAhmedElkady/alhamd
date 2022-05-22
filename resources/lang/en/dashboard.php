@@ -9,4 +9,5 @@ return [
     'users'         =>  'Admins' ,
     'read'          =>  'Show' ,
     'total'         =>  'Total' ,
+    'salesgraph'    =>  'Sales Graph' ,
 ];

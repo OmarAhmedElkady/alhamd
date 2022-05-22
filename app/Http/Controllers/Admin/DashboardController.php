@@ -20,12 +20,46 @@ class DashboardController extends Controller
         $customers_count = customer::Abbr()->count() ;
         $users_count = User::count() ;
 
+        //  Calculates the total sales for the month
         $sales_data = Order::select(
-            DB::raw('YEAR(created_at) as year'),
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('SUM(total_price) as sum')
+            DB::raw('YEAR(created_at) as year'),    // bring the year
+            DB::raw('MONTH(created_at) as month'),  // bring month
+            DB::raw('SUM(total_price) as sum')            // Total sales for the month
         )->groupBy('month')->get();
 
-        return view('admin.dashboard.index' , compact('categories_count', 'products_count', 'customers_count', 'users_count' , 'sales_data')) ;
+        $collection  = collect($sales_data) ;
+
+        $year = $collection ->pluck('year'); //  Return the years only
+
+        $month = $collection ->pluck('month');  // Return only months
+
+        $sum = $collection ->pluck('sum');      //  Returns the total sales for the month
+
+        // Combine month and year
+        $yearAndMOnth = $collection->map(function ($item, $key) {
+            return $item->year . '-' . $item->month ;
+        });
+
+        $chartjs = app()->chartjs
+                ->name('lineChartTest')
+                ->type('line')
+                ->size(['width' => 400, 'height' => 130])
+                ->labels($yearAndMOnth->toArray())
+                ->datasets([
+                    [
+                        "label" => __('dashboard.salesgraph'),
+                        'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                        'borderColor' => "rgba(38, 185, 154, 0.7)",
+                        "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                        "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                        "pointHoverBackgroundColor" => "#fff",
+                        "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                        'data' => $sum,
+                    ],
+                ])
+                ->options([]);
+
+
+        return view('admin.dashboard.index' , compact('categories_count', 'products_count', 'customers_count', 'users_count' , 'chartjs')) ;
     }
 }
