@@ -36,7 +36,7 @@
                             @if (isset($categories) && $categories->count() > 0)
 
                                 <p style="display: none" id="products_select"></p>
-                                @foreach ($categories as $category)
+                                @foreach ($categories as $index => $category)
 
 
                                     <div class="panel-group">
@@ -53,7 +53,7 @@
 
                                                 <div class="panel-body">
 
-                                                    @if ($category->products->count() > 0)
+                                                    @if ($products[$index]->count() > 0)
 
                                                         <table class="table table-hover">
 
@@ -73,16 +73,20 @@
 
                                                             <tbody id="tbody_category_{{ $category->translation_of }}">
 
-                                                                @foreach ($category->products as $product)
+                                                                @foreach ($products[$index] as $product)
 
                                                                     <tr>
                                                                         <td>{{ $product->name }}</td>
                                                                         <td>{{ $product->store }}</td>
-                                                                        @if (isset($product->price) && $product->price > 0)
-                                                                            <td>{{ number_format($product->price, 2) }}</td>
+
+                                                                        @if ($customer->client_permissions == 'pharmaceutical')
+                                                                            <td>{{ number_format($product->pharmacist_price, 2) }}</td>
+                                                                        @elseif ($customer->client_permissions == 'customer')
+                                                                            <td>{{ number_format($product->selling_price, 2) }}</td>
                                                                         @else
-                                                                            <td>{{ number_format($product->ProductPriceAccordingToCustomerType, 2) }}</td>
+                                                                        <td>{{ number_format($product->ProductPriceAccordingToCustomerType, 2) }}</td>
                                                                         @endif
+
                                                                         <td>
                                                                             <a href=""
                                                                             id="product-{{ $product->translation_of }}"
@@ -277,7 +281,7 @@
                     'search'        :   value ,
                 } , success : function ( data ) {
 
-                    
+
                     $("#searching_category_" + category_id).hide() ;    // إخفاء رساله جارى البحث
 
                     // فهذا يعنى أنه لا يوجد بياناتfalse = إذا كانت القيمه الراجعه
@@ -314,66 +318,39 @@
                                 price = value.ProductPriceAccordingToCustomerType ;
                             }
 
-                            // console.log() ;
-                            // '+ ()) ? "btn-success" : "btn-default disabled" +'
-                            // if (products_select.indexOf(value.translation_of.toString() ) != -1) {
-                            //     console.log(value.translation_of) ;
-                            // }   else    {
-                            //     console.log("no") ;
-                            // }
+                            tableRow = '<tr>' +
+                                            '<td>' + value.name + '</td>'+
+                                            '<td>' + value.store + '</td>' +
+                                            '<td>' + price.toLocaleString('en-US') +'</td>' ;
 
+                                            if (products_select.indexOf(value.translation_of.toString() ) != -1) {
+                                                tableRow += '<td>'  +
+                                                                '<a ' +
+                                                                'id="product-'+ value.translation_of+'" ' +
+                                                                'data-name="'+ value.name +'" ' +
+                                                                'data-id="'+ value.translation_of+'" ' +
+                                                                'data-price="'+ price +'"' +
+                                                                'class="btn btn-sm btn-default disabled add-product-btn "> ' +
+                                                                '<i class="fa fa-plus"></i> ' +
+                                                                '</a> ' +
+                                                            '</td> ' ;
+                                            } else {
+                                                tableRow += '<td>'  +
+                                                                '<a ' +
+                                                                'id="product-'+ value.translation_of+'" ' +
+                                                                'data-name="'+ value.name +'" ' +
+                                                                'data-id="'+ value.translation_of+'" ' +
+                                                                'data-price="'+ price +'"' +
+                                                                'class="btn btn-sm btn-success add-product-btn "> ' +
+                                                                '<i class="fa fa-plus"></i> ' +
+                                                                '</a> ' +
+                                                            '</td> ' ;
+                                            }
 
+                                        '</tr>' ;
 
+                            $("#tbody_category_" + category_id).append(tableRow);
 
-                                tableRow = '<tr>' +
-                                                '<td>' + value.name + '</td>'+
-                                                '<td>' + value.store + '</td>' +
-                                                '<td>' + price.toLocaleString('en-US') +'</td>' ;
-                                                // '<td>'  +
-                                                //     '<a ' +
-                                                //     'id="product-'+ value.translation_of+'" ' +
-                                                //     'data-name="'+ value.name +'" ' +
-                                                //     'data-id="'+ value.translation_of+'" ' +
-                                                //     'data-price="'+ price +'"' +
-                                                //     'class="btn btn-sm add-product-btn "> ' +
-                                                //     '<i class="fa fa-plus"></i> ' +
-                                                //     '</a> ' +
-                                                // '</td> ' +
-
-                                                // tableRow += '<td>' ;
-
-                                                    if (products_select.indexOf(value.translation_of.toString() ) != -1) {
-                                                        tableRow += '<td>'  +
-                                                                        '<a ' +
-                                                                        'id="product-'+ value.translation_of+'" ' +
-                                                                        'data-name="'+ value.name +'" ' +
-                                                                        'data-id="'+ value.translation_of+'" ' +
-                                                                        'data-price="'+ price +'"' +
-                                                                        'class="btn btn-sm btn-default disabled add-product-btn "> ' +
-                                                                        '<i class="fa fa-plus"></i> ' +
-                                                                        '</a> ' +
-                                                                    '</td> ' ;
-                                                    } else {
-                                                        tableRow += '<td>'  +
-                                                                        '<a ' +
-                                                                        'id="product-'+ value.translation_of+'" ' +
-                                                                        'data-name="'+ value.name +'" ' +
-                                                                        'data-id="'+ value.translation_of+'" ' +
-                                                                        'data-price="'+ price +'"' +
-                                                                        'class="btn btn-sm btn-success add-product-btn "> ' +
-                                                                        '<i class="fa fa-plus"></i> ' +
-                                                                        '</a> ' +
-                                                                    '</td> ' ;
-                                                    }
-
-                                                // tableRow += '</td>'
-
-
-
-                                            '</tr>' ;
-
-                                $("#tbody_category_" + category_id).append(tableRow);
-                        //     }
                         }) ;
                     }
                 }
