@@ -47,7 +47,7 @@ class DashboardController extends Controller
                 ->labels($yearAndMOnth->toArray())
                 ->datasets([
                     [
-                        "label" => __('dashboard.salesgraph'),
+                        "label" => __('dashboard.total'),
                         'backgroundColor' => "rgba(38, 185, 154, 0.31)",
                         'borderColor' => "rgba(38, 185, 154, 0.7)",
                         "pointBorderColor" => "rgba(38, 185, 154, 0.7)",

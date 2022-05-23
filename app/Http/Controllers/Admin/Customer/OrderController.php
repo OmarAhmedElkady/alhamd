@@ -412,50 +412,96 @@ class OrderController extends Controller
                 // If the customer already exists && there are orders
                 if ($customer && $request->products ) {
 
+                    // Adding the quantity of the product in the order to the quantity in stock
+                    foreach ($order->product_order as $product) {
+                        $store = $product->product[0]->store + $product->quantity ;
+                        Product::where('translation_of' , $product['product_id'] )->update(['store' => $store ]) ;
+                    }
+
                     $total_price = 0 ;
                     // If the client is a pharmacist
                     if ($customer->client_permissions == 'pharmaceutical') {
 
-                        foreach($request->products as $product => $quantity) {
+                        foreach($request->products as $product_translation_of => $quantity) {
 
                             // Fetch the pharmacist's product price
-                            $product = Product::select('pharmacist_price')->where('translation_of' , $product)->first() ;
+                            $product = Product::select('translation_of' , 'pharmacist_price' , 'store')->where('translation_of' , $product_translation_of)->first() ;
 
                             if ($product) {
                                 // Multiply product price by quantity
                                 $totalProductPrice = $product->pharmacist_price * $quantity['quantity'] ;
                                 // Add the total price of the product with the total price of the previous products
                                 $total_price += $totalProductPrice ;
+
+                                // If the quantity in stock is greater than the quantity requested by the pharmacist
+                                if($product->store > $quantity['quantity']) {
+                                    $store = $product->store - $quantity['quantity'] ;
+
+                                    // Update the quantity in stock to the new quantity
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => $store]) ;
+
+                                }   else    {  // If the quantity requested by the pharmacist is greater than the quantity in stock
+
+                                    // Update the quantity in stock to the new quantity
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => 0]) ;
+                                }
                             }   //  End If
                         }   //  End Of Foreach
 
                         // If the client is a customer normal
                     } elseif ($customer->client_permissions == 'customer') {
 
-                        foreach($request->products as $product => $quantity) {
+                        foreach($request->products as $product_translation_of => $quantity) {
 
                             // Fetch the customer product price normal
-                            $product = Product::select('selling_price')->where('translation_of' , $product)->first() ;
+                            $product = Product::select('translation_of' , 'selling_price' , 'store')->where('translation_of' , $product_translation_of)->first() ;
                             if ($product) {
                                 // Multiply product price by quantity
                                 $totalProductPrice = $product->selling_price * $quantity['quantity']  ;
                                 // Add the total price of the product with the total price of the previous products
                                 $total_price += $totalProductPrice ;
+
+                                // If the quantity in stock is greater than the quantity requested by the pharmacist
+                                if($product->store > $quantity['quantity']) {
+                                    $store = $product->store - $quantity['quantity'] ;
+
+                                    // Update the quantity in stock to the new quantity
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => $store]) ;
+
+                                }   else    {  // If the quantity requested by the pharmacist is greater than the quantity in stock
+
+                                    // Update the quantity in stock to the new quantity
+                                    Product::where('translation_of' , $product_translation_of)->update(['store' => 0]) ;
+                                }
                             }   //  End If
                         }   //  End Foreach
 
                     } else  {   //  If the customer is a special customer
 
-                        foreach($request->products as $product => $quantity) {
+                        foreach($request->products as $product_translation_of => $quantity) {
 
                             // Get the price of the product for the special customer
-                            $product = Product::select('selling_price' , 'pharmacist_price')->where('translation_of' , $product)->first() ;
+                            // 'translation_of' ,'selling_price' , 'pharmacist_price' , 'store'
+                            $product = Product::select('translation_of' ,'selling_price' , 'pharmacist_price' , 'store')->where('translation_of' , $product_translation_of)->first() ;
 
                             if ($product) {
                                 // Multiply product price by quantity
                                 $totalProductPrice = $product->ProductPriceAccordingToCustomerType * $quantity['quantity'] ;
                                 // // Add the total price of the product with the total price of the previous products
                                 $total_price += $totalProductPrice ;
+
+                                // If the quantity in stock is greater than the quantity requested by the pharmacist
+                                if($product->store > $quantity['quantity']) {
+                                    $store = $product->store - $quantity['quantity'] ;
+
+                                    // Update the quantity in stock to the new quantity
+                                    $newProduct = Product::where('translation_of' , $product_translation_of)->update(['store' => $store]) ;
+
+                                }   else    {  // If the quantity requested by the pharmacist is greater than the quantity in stock
+
+                                    // Update the quantity in stock to the new quantity
+                                    $newProduct = Product::where('translation_of' , $product_translation_of)->update(['store' => 0]) ;
+                                }
                             }   //  End If
                         }   //  End Of Foreach
                     }   //  End Else
@@ -474,7 +520,7 @@ class OrderController extends Controller
                         Order::where('id' , $order->id)->update([
                             'total_price'   =>  $total_price ,
                             'status'        =>  '0' ,
-                            ]) ;
+                        ]) ;
 
 
                         $old_product_order = Product_order::select('id')->where('order_id' , $order->id)->get() ;
@@ -509,6 +555,13 @@ class OrderController extends Controller
                 $order = Order::select('id')->where('id' , $request->id)->first() ;
 
                 if ($order && $order->count() > 0) {
+
+                    // Adding the quantity of the product in the order to the quantity in stock
+                    foreach ($order->product_order as $product) {
+                        $store = $product->product[0]->store + $product->quantity ;
+                        Product::where('translation_of' , $product['product_id'] )->update(['store' => $store ]) ;
+                    }
+
                     $product_order = Product_order::select('id')->where('order_id' , $request->id)->get() ;
 
                     DB::beginTransaction() ;
