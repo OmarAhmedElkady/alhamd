@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 define('PAGINATE_USER' , 10) ;
 define('PAGINATE_CATEGORIES' , 10) ;
 define('PAGINATE_PRODUCTS' , 10) ;
+define('ORDER_PRODUCTS' , 5) ;
 define('PAGINATE_LANGUAGE' , 10) ;
 define('PAGINATE_CUSTOMERS' , 10) ;
 define('PAGINATE_ORDERS' , 10) ;

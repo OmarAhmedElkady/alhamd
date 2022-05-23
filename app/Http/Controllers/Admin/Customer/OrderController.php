@@ -34,7 +34,7 @@ class OrderController extends Controller
 
                 // Bring only 10 products from each section
                 foreach ($categories as $key => $value) {
-                    $products[] = Product::select('translation_of', 'category_id', 'name', 'pharmacist_price', 'selling_price',  'store')->where('category_id', $categories[$key]->translation_of)->Abbr()->take(PAGINATE_PRODUCTS)->orderBy('name')->get();
+                    $products[] = Product::select('translation_of', 'category_id', 'name', 'pharmacist_price', 'selling_price',  'store')->where('category_id', $categories[$key]->translation_of)->Abbr()->take(ORDER_PRODUCTS)->orderBy('name')->get();
                 }
 
                 // Fetch all previous orders for this customer
@@ -69,7 +69,7 @@ class OrderController extends Controller
                 // Fetch the products you are looking for
                 $products = Product::select('translation_of', 'name', 'pharmacist_price', 'selling_price',  'store')->Abbr()->orderBy('name')
                     ->where('name', 'like', '%' . $search . '%')
-                    ->where('category_id', $request->category_id)->paginate(PAGINATE_PRODUCTS);
+                    ->where('category_id', $request->category_id)->paginate(ORDER_PRODUCTS);
 
                 if (isset($products) && $products->count() > 0) {
                     $products = collect($products)->merge($customer);
@@ -236,58 +236,24 @@ class OrderController extends Controller
                     return redirect()->route('admin.all_order.index');
                 }
 
+                // Get all categories
+                $categories = category::Selection()->LanguageSelect()->orderBy('name')->get();
 
-                $client_permissions = $order->customer->client_permissions;
-                if ($client_permissions == 'pharmaceutical') {
-
-                    $categories = category::Selection()->with(['products' => function ($q) {
-                        $q->select('translation_of', 'category_id', 'name', 'pharmacist_price as price', 'selling_price',  'store')->Abbr()->orderBy('name');
-                    }])->LanguageSelect()->orderBy('name')->get();
-
-
-                    $order = Order::select('id', 'client_id')->where('id', $id)->with(['customer' => function ($q) {
-                        return $q->select('translation_of', 'name', 'client_permissions')->Abbr();
-                    }])->with(['product_order' => function ($product_order) {
-                        return $product_order->select('product_id', 'order_id', 'quantity')->with(['product' => function ($product) {
-                            return $product->select('translation_of', 'name', 'pharmacist_price as price')->Abbr();
-                        }]);
-                    }])->first();
-                } elseif ($client_permissions == 'customer') {
-                    $categories = category::Selection()->with(['products' => function ($q) {
-                        return $q->select('translation_of', 'category_id', 'name', 'pharmacist_price', 'selling_price as price',  'store')->Abbr()->orderBy('name');
-                    }])->LanguageSelect()->orderBy('name')->get();
-
-
-                    $order = Order::select('id', 'client_id')->where('id', $id)->with(['customer' => function ($q) {
-                        return $q->select('translation_of', 'name', 'client_permissions')->Abbr();
-                    }])->with(['product_order' => function ($product_order) {
-                        return $product_order->select('product_id', 'order_id', 'quantity')->with(['product' => function ($product) {
-                            return $product->select('translation_of', 'name', 'selling_price as price')->Abbr();
-                        }]);
-                    }])->first();
-                } else {
-                    // $client_permissions = (($this->selling_price - $this->pharmacist_price) / 2) + $this->pharmacist_price ;
-                    $categories = category::Selection()->with(['products' => function ($q) {
-                        return $q->select('translation_of', 'category_id', 'name', 'pharmacist_price', 'selling_price', 'store')->Abbr()->orderBy('name');
-                    }])->LanguageSelect()->orderBy('name')->get();
-
-
-                    $order = Order::select('id', 'client_id')->where('id', $id)->with(['customer' => function ($q) {
-                        return $q->select('translation_of', 'name', 'client_permissions')->Abbr();
-                    }])->with(['product_order' => function ($product_order) {
-                        return $product_order->select('product_id', 'order_id', 'quantity')->with(['product' => function ($product) {
-                            return $product->select('translation_of', 'name', 'pharmacist_price', 'selling_price')->Abbr();
-                        }]);
-                    }])->first();
+                // Bring only 10 products from each section
+                foreach ($categories as $key => $value) {
+                    $products[] = Product::select('translation_of', 'category_id', 'name', 'pharmacist_price', 'selling_price',  'store')->where('category_id', $categories[$key]->translation_of)->Abbr()->take(ORDER_PRODUCTS)->orderBy('name')->get();
                 }
 
-                if (isset($categories) && $categories->count() > 0) {
-                    $categories[0]->products->makeHidden(['pharmacistProfitRatio', 'profitRateFromTheAudience', 'totalProfitFromTheAudience', 'totalProfitFromThePharmacist']);
-                }
+                // Bring all the products of the order to be modified
+                $order = Order::select('id', 'client_id')->where('id', $id)->with(['customer' => function ($q) {
+                    return $q->select('translation_of', 'name', 'client_permissions')->Abbr();
+                }])->with(['product_order' => function ($product_order) {
+                    return $product_order->select('product_id', 'order_id', 'quantity')->with(['product' => function ($product) {
+                        return $product->select('translation_of', 'name', 'pharmacist_price', 'selling_price')->Abbr();
+                    }]);
+                }])->first();
 
-                // return $order->product_order[3] ;
-
-                return view('admin.customers.orders.edit')->with('customer', $order->customer)->with('categories', $categories)->with('order', $order);
+                return view('admin.customers.orders.edit')->with('customer', $order->customer)->with('categories', $categories)->with('products' , $products)->with('order', $order);
             } else {
                 return redirect()->route('admin.all_order.index');
             }

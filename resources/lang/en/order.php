@@ -10,6 +10,7 @@ return [
     'orders'                =>  'Orders' ,
     'add_a_new_order'       => 'Add A New Order' ,
     'add_order'             =>  'Add Order' ,
+    'edit_order'            =>  'Edit Order' ,
     'add'                   => 'Add' ,
 
 

@@ -84,7 +84,7 @@
                                                                         @elseif ($customer->client_permissions == 'customer')
                                                                             <td>{{ number_format($product->selling_price, 2) }}</td>
                                                                         @else
-                                                                        <td>{{ number_format($product->ProductPriceAccordingToCustomerType, 2) }}</td>
+                                                                            <td>{{ number_format($product->ProductPriceAccordingToCustomerType, 2) }}</td>
                                                                         @endif
 
                                                                         <td>
