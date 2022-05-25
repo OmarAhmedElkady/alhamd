@@ -321,7 +321,8 @@
                             tableRow = '<tr>' +
                                             '<td>' + value.name + '</td>'+
                                             '<td>' + value.store + '</td>' +
-                                            '<td>' + price.toLocaleString('en-US') +'</td>' ;
+                                            // '<td>' + price.toLocaleString('en-US') +'</td>' ;
+                                            '<td>' + $.number(price, 2) +'</td>' ;
 
                                             if (products_select.indexOf(value.translation_of.toString() ) != -1) {
                                                 tableRow += '<td>'  +

@@ -21,6 +21,7 @@ class CreateCustomersTable extends Migration
             $table->string('name' , 40) ;
             $table->string('phone' , 11)->nullable() ;
             $table->text('title')->nullable() ;
+            $table->double('previous_account')->default(0) ;
             $table->timestamps();
         });
     }

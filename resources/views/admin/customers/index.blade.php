@@ -59,6 +59,8 @@
                                 <th>{{ __('customers.phone') }}</th>
                                 <th>{{ __('customers.title') }}</th>
                                 <th>{{ __('customers.client') }}</th>
+                                <th>{{ __('customers.previous_account') }}</th>
+                                <th>{{ __('customers.pay') }}</th>
                                 <th>{{ __('customers.add_order') }}</th>
                                 <th>{{ __('customers.action') }}</th>
                             </tr>
@@ -72,6 +74,15 @@
                                     <td>{{ $customer->phone }}</td>
                                     <td>{{ $customer->title }}</td>
                                     <td>{{ __('customers.'.$customer->client_permissions) }}</td>
+                                    <td>{{ number_format($customer->previous_account , 2) }}</td>
+
+                                    <td>
+                                        @if ($customer->previous_account > 0)
+                                            <a href="{{ route('admin.payments.create' , $customer->translation_of) }}" class="btn btn-success">{{ __('customers.pay_sum') }}</a>
+                                        @else
+                                            <button class="btn btn-success disabled">{{ __('customers.pay_sum') }}</button>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if (auth()->user()->hasPermission('orders-create'))
                                             <a href="{{ route('admin.order.create' , $customer->translation_of) }}" class="btn btn-primary btn-sm">{{ __('customers.add_order') }}</a>
@@ -218,6 +229,9 @@
                             var URLedit = "{{ route('admin.customer.edit' , ':translation_of') }}" ;
                             URLedit = URLedit.replace(':translation_of', translation_of);
 
+                            var URLprevious_account = "{{ route('admin.payments.create' , ':translation_of') }}" ;
+                            URLprevious_account = URLprevious_account.replace(':translation_of', translation_of);
+
                             // حفظ البيانات فى الجدول
                             tableRow = '<tr id="row_customer_' + value.translation_of +'">' +
                                             '<td>' + ++index + '</td>'+
@@ -242,13 +256,20 @@
                                                 tableRow += '<td>{{ __('customers.customer') }}</td>' ;
                                             }
 
+                                            tableRow += '<td>'+ $.number( value.previous_account , 2)+'</td>' ;
+
+                                            if (value.previous_account > 0) {
+                                                tableRow += '<td><a href="' + URLprevious_account + '" class="btn btn-success">{{ __('customers.pay_sum') }}</a></td>' ;
+                                            }  else    {
+                                                tableRow += '<td><button class="btn btn-success disabled">{{ __('customers.pay_sum') }}</button></td>' ;
+                                            }
+
                                             var ordersCreate   = "{{ auth()->user()->hasPermission('orders-create') }}" ;
                                             if (ordersCreate) {
                                                 tableRow += '<td><a href="'+URLCreate+'" class="btn btn-primary btn-sm">{{ __('customers.add_order') }}</a></td>' ;
                                             } else {
                                                 tableRow +=  '<td><button class="btn btn-primary btn-sm disabled">{{ __('customers.add_order') }}</button></td>' ;
                                             }
-                                            // tableRow += '<td><a href="#" class="btn btn-primary btn-sm">{{ __('customers.add_order') }}</a></td>'+
 
                                             tableRow += '<td>' ;
                                                 var CheckPermissionEdit   = "{{ Auth::user()->hasRole('super_admin') || Auth::user()->hasPermission('customers-update')  }}" ;

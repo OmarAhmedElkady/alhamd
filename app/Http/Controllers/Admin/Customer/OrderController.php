@@ -92,7 +92,7 @@ class OrderController extends Controller
             if (isset($request->client_id) && filter_var($request->client_id, FILTER_VALIDATE_INT)) {
 
                 // Search for the client and get his permissions || Its type is [Pharmacist - Client]
-                $customer = customer::select('client_permissions')->where('translation_of', $request->client_id)->first();
+                $customer = customer::select('client_permissions' , 'previous_account')->where('translation_of', $request->client_id)->first();
 
                 // If the customer already exists && there are orders
                 if ($customer && $request->products) {
@@ -183,22 +183,26 @@ class OrderController extends Controller
 
                     DB::beginTransaction();
 
-                    // Adding a new order and fetching the [id] of the new order
-                    $order_id = Order::create([
-                        'client_id' =>  $request->client_id,
-                        'total_price'   =>  $total_price,
-                    ])->id;
+                        // Adding a new order and fetching the [id] of the new order
+                        $order_id = Order::create([
+                            'client_id' =>  $request->client_id,
+                            'total_price'   =>  $total_price,
+                        ])->id;
 
-                    $product_orders = [];
-                    foreach ($request->products as $product => $quantity) {
-                        $product_orders[]   = [
-                            'product_id'   =>  $product,
-                            'order_id'  =>  $order_id,
-                            'quantity'  =>  $quantity['quantity'],
-                        ];
-                    }
+                        $product_orders = [];
+                        foreach ($request->products as $product => $quantity) {
+                            $product_orders[]   = [
+                                'product_id'   =>  $product,
+                                'order_id'  =>  $order_id,
+                                'quantity'  =>  $quantity['quantity'],
+                            ];
+                        }
 
-                    Product_order::insert($product_orders);
+                        Product_order::insert($product_orders);
+
+                        // Modify the customer's total account
+                        $payment = $customer->previous_account + $total_price ;
+                        customer::where('translation_of' , $request->client_id)->update(['previous_account' => $payment]) ;
 
                     DB::commit();
 
@@ -271,13 +275,13 @@ class OrderController extends Controller
             // If there is a customer you want to add the order to
             if (isset($request->client_id) && filter_var($request->client_id, FILTER_VALIDATE_INT) && isset($request->order_id) && filter_var($request->order_id, FILTER_VALIDATE_INT)) {
 
-                $order = Order::select('id')->where('id', $request->order_id)->where('client_id', $request->client_id)->first();
+                $order = Order::select('id' , 'total_price')->where('id', $request->order_id)->where('client_id', $request->client_id)->first();
 
                 if (!$order) {
                     return redirect()->route('admin.all_order.index');
                 }
                 // Search for the client and get his permissions || Its type is [Pharmacist - Client]
-                $customer = customer::select('client_permissions')->where('translation_of', $request->client_id)->first();
+                $customer = customer::select('client_permissions' , 'previous_account')->where('translation_of', $request->client_id)->first();
 
                 // If the customer already exists && there are orders
                 if ($customer && $request->products) {
@@ -375,25 +379,31 @@ class OrderController extends Controller
 
                     DB::beginTransaction();
 
-                    $product_orders = [];
-                    foreach ($request->products as $product => $quantity) {
-                        $product_orders[]   = [
-                            'product_id'   =>  $product,
-                            'order_id'  =>  $order->id,
-                            'quantity'  =>  $quantity['quantity'],
-                        ];
-                    }
+                        $product_orders = [];
+                        foreach ($request->products as $product => $quantity) {
+                            $product_orders[]   = [
+                                'product_id'   =>  $product,
+                                'order_id'  =>  $order->id,
+                                'quantity'  =>  $quantity['quantity'],
+                            ];
+                        }
 
-                    Order::where('id', $order->id)->update([
-                        'total_price'   =>  $total_price,
-                        'status'        =>  '0',
-                    ]);
+                        Order::where('id', $order->id)->update([
+                            'total_price'   =>  $total_price,
+                            'status'        =>  '0',
+                        ]);
 
 
-                    $old_product_order = Product_order::select('id')->where('order_id', $order->id)->get();
-                    Product_order::destroy($old_product_order->toArray());
+                        $old_product_order = Product_order::select('id')->where('order_id', $order->id)->get();
+                        Product_order::destroy($old_product_order->toArray());
 
-                    Product_order::insert($product_orders);
+                        Product_order::insert($product_orders);
+
+                        // Modify the customer's total account
+                        $oldPrice = $order->total_price;
+                        $payment = ($customer->previous_account - $oldPrice ) + $total_price ;
+                        customer::where('translation_of' , $request->client_id)->update(['previous_account' => $payment]) ;
+
 
                     DB::commit();
 
@@ -419,7 +429,7 @@ class OrderController extends Controller
 
             if ($request->has('id') && filter_var($request->id, FILTER_VALIDATE_INT)) {
 
-                $order = Order::select('id')->where('id', $request->id)->first();
+                $order = Order::select('id' , 'client_id' , 'total_price')->where('id', $request->id)->first();
 
                 if ($order && $order->count() > 0) {
 
@@ -432,8 +442,20 @@ class OrderController extends Controller
                     $product_order = Product_order::select('id')->where('order_id', $request->id)->get();
 
                     DB::beginTransaction();
-                    Product_order::destroy($product_order->toArray());
-                    $order->delete();
+
+                        // Customer id number
+                        $customer_id = $order->customer->translation_of ;
+
+                        // Delete the invoice value from the customer's total account
+                        $total_price =  $order->customer->previous_account - $order->total_price;
+
+                        // Modify the customer's total account
+                        customer::where('translation_of' , $customer_id)->update(['previous_account' => $total_price]) ;
+
+                        Product_order::destroy($product_order->toArray());
+
+                        $order->delete();
+
                     DB::commit();
 
                     return response()->json([

@@ -10,7 +10,21 @@ return [
     'phone'                 =>  'رقم الهاتف' ,
     'title'                 =>  'العنوان' ,
     'client'                =>  'عميل' ,
+    'previous_account'      =>  'الحساب السابق' ,
+    'pay'                   =>  'سداد' ,
+    'pay_sum'               =>  'دفع مبلغ' ,
+    'payment'               =>  'دفع' ,
+    'the_amount'            =>  'المبلغ' ,
+    'total_account'         =>  'إجمالى الحساب :- ' ,
+    'payment_in_progress'   =>  'جارى الدفع ...' ,
+    'payment_date'          =>  'تاريخ الدفع' ,
+    'payment_'              =>  'المبلغ' ,
+    'edit_payment'          =>  'تعديل المبلغ' ,
+    'amount_to_be_modified' =>  'المبلغ المراد تعديله' ,
     'add_order'             =>  'إضافه أوردر' ,
+
+    'payment_completed_successfully'    =>  'تمت عمليه الدفع بنجاح' ,
+    'Payment_failed'                    =>  'فشل عمليه الدفع . الرجاء إعاده المحاوله لاحقا' ,
 
     'action'                =>  'الأكشن'  ,
     'add'                   =>  'إضافه' ,
@@ -27,6 +41,8 @@ return [
 
     'this_customer'             =>  'هذا العميل ' ,
     'not_found'                 =>  'غير موجود' ,
+
+    'confirm_delete_payment'    =>  'هل أنت متأكد من عمليه الحذف' ,
     //////////////////////////////////////End Of The Customers Index Page////////////////////////////////////
 
 
@@ -66,4 +82,17 @@ return [
 
     ////////////////////////////////////Error End To Add A New Customers////////////////////////////////////
 
+
+
+    ////////////////////////////////////Start Errors when paying the account////////////////////////////////////
+
+    'amount_required'   =>  'من فضلك قم بإدخال المبلغ' ,
+    'amount_numeric'    =>  'يجب أن يكون المبلغ رقم' ,
+    'amount_min'        =>  'يجب ان يكون المبلغ اكبر من 0' ,
+
+    'amount_big'        =>  'المبلغ الذي سيتم دفعه أكبر من إجمالي الحساب' ,
+    'not_payment'       =>  'هذا العميل لم يدفع من قبل' ,
+    'previous_payments' =>  'عمليات الدفع السابقه' ,
+
+    ////////////////////////////////////End Errors when paying the account////////////////////////////////////
 ];

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\Customer\OrderController;
+use App\Http\Controllers\Admin\Customer\PaymentsController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LanguageController;
@@ -21,6 +22,7 @@ define('ORDER_PRODUCTS' , 5) ;
 define('PAGINATE_LANGUAGE' , 10) ;
 define('PAGINATE_CUSTOMERS' , 10) ;
 define('PAGINATE_ORDERS' , 10) ;
+define('PAGINATE_PAYMENT' , 10) ;
 
 define('PAGINATE_PHOTO_USER' , base_path() . '\assets\admin\img\user\\') ;
 define('PAGINATE_IMAGE_PRODUCT' , base_path() . '\assets\admin\img\products\\') ;
@@ -139,7 +141,6 @@ Route::group(['middleware' => 'auth'] , function (){
         }) ;
         Route::get('/search' , [CustomerController::class , 'search'])->name('admin.customer.search') ;
 
-
         Route::group(['middleware' => 'permission:customers-create'] , function(){
             Route::get('/create' , [CustomerController::class , 'create'])->name('admin.customer.create') ;
             Route::post('/store' , [CustomerController::class , 'store'])->name('admin.customer.store') ;
@@ -187,6 +188,45 @@ Route::group(['middleware' => 'auth'] , function (){
             }) ;
         })  ;
         ///////////////////////////////////End Customers Order Route/////////////////////////////////////
+
+
+        ///////////////////////////////////Start Customers Order Route/////////////////////////////////////
+        Route::group(['prefix' => 'payments'] , function() {
+
+            Route::get('/{id}' , [PaymentsController::class , 'pay'])->name('admin.payments.create') ;
+
+            Route::post('/store' , [PaymentsController::class , 'store'])->name('admin.payments.store') ;
+
+            Route::get('edit/{id}' , [PaymentsController::class , 'edit'])->name('admin.payments.edit') ;
+
+            Route::post('update' , [PaymentsController::class , 'update'])->name('admin.payments.update') ;
+
+            Route::post('delete' , [PaymentsController::class , 'delete'])->name('admin.payments.delete') ;
+
+            // Route::group(['middleware' => 'permission:orders-read'] , function(){
+            //     Route::get('/' , [OrderController::class , 'index'])->name('admin.order.index') ;
+
+            // }) ;
+            // Route::get('/search' , [OrderController::class , 'search'])->name('admin.order.search') ;
+
+
+            // Route::group(['middleware' => 'permission:orders-create'] , function(){
+            //     Route::get('/create/{TranslationOf}' , [OrderController::class , 'create'])->name('admin.order.create') ;
+            //     Route::post('/store' , [OrderController::class , 'store'])->name('admin.order.store') ;
+            // }) ;
+
+            // Route::group(['middleware' => 'permission:orders-update'] , function(){
+            //     Route::get('/edit/{id}' , [OrderController::class , 'edit'])->name('admin.order.edit') ;
+            //     Route::post('/update' , [OrderController::class , 'update'])->name('admin.order.update') ;
+            // }) ;
+
+
+            // Route::group(['middleware' => 'permission:orders-delete'] , function(){
+            //     Route::post('/delete' , [OrderController::class , 'delete'])->name('admin.order.delete') ;
+            // }) ;
+        })  ;
+        ///////////////////////////////////End Customers Order Route/////////////////////////////////////
+
 
 
         ///////////////////////////////////Start Customers Order Route/////////////////////////////////////

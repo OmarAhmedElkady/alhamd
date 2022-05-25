@@ -9,12 +9,12 @@ class customer extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'id' , 'abbr' , 'translation_of' , 'name' , 'phone' , 'title' , 'client_permissions' ];
+    protected $fillable = [ 'id' , 'abbr' , 'translation_of' , 'name' , 'phone' , 'title' , 'client_permissions' , 'previous_account' ];
 
 
     ////////////////////////////////////////Start Scope////////////////////////////////////////
     public function scopeSelection($q)  {
-        return $q->select( 'translation_of', 'name' ,'phone' , 'title' , 'client_permissions' ) ;
+        return $q->select( 'translation_of', 'name' ,'phone' , 'title' , 'client_permissions' , 'previous_account' ) ;
     }
 
 
@@ -33,5 +33,9 @@ class customer extends Model
 
     public function orders() {
         return $this->hasMany(Order::class , 'client_id' , 'translation_of') ;
+    }
+
+    public function payments() {
+        return $this->hasMany(Payment::class , 'customer_id' , 'translation_of') ;
     }
 }

@@ -10,7 +10,21 @@ return [
     'phone'                 =>  'Phone Number' ,
     'title'                 =>  'The Address' ,
     'client'                =>  'Client' ,
+    'previous_account'      =>  'Previous Account' ,
+    'pay'                   =>  'Pay' ,
+    'pay_sum'               =>  'Pay Sum' ,
+    'payment'               =>  'Payment' ,
+    'the_amount'            =>  'The Amount' ,
+    'total_account'         =>  'Total Account :- ' ,
+    'payment_in_progress'   =>  'Payment In Progress ...' ,
+    'payment_date'          =>  'Payment Date' ,
+    'payment_'               =>  'Payment' ,
+    'edit_payment'          =>  'Edit Payment' ,
+    'amount_to_be_modified' =>  'Amount To Be Modified' ,
     'add_order'             =>  'Add Order' ,
+
+    'payment_completed_successfully'    =>  'Payment Completed Successfully' ,
+    'Payment_failed'                    =>  'Payment Failed. Please Try Again Later' ,
 
     'action'                =>  'Action'  ,
     'add'                   =>  'Add' ,
@@ -27,6 +41,8 @@ return [
 
     'this_customer'             =>  'This Client ' ,
     'not_found'                 =>  'Not Found' ,
+
+    'confirm_delete_payment'    =>  'Are Sure Of The Deleting Process' ,
     //////////////////////////////////////End Of The Customers Index Page////////////////////////////////////
 
 
@@ -65,5 +81,18 @@ return [
 
 
     ////////////////////////////////////Error End To Add A New Customers////////////////////////////////////
+
+
+    ////////////////////////////////////Start Errors when paying the account////////////////////////////////////
+
+    'amount_required'   =>  'Please Enter The Amount' ,
+    'amount_numeric'    =>  'The Amount Must Be A Number' ,
+    'amount_min'        =>  'The Amount Must Be Greater Than 0' ,
+
+    'amount_big'        =>  'The Amount To Be Paid Is Greater Than The Total Account' ,
+
+    'not_payment'       =>  'This Customer Has Never Paid Before' ,
+    'previous_payments' =>  'Previous Payments' ,
+    ////////////////////////////////////End Errors when paying the account////////////////////////////////////
 
 ];

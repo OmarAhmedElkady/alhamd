@@ -278,4 +278,5 @@ class CustomerController extends Controller
             ]) ;
         }   // End Catch
     }   // The end of the delete function
+
 }
