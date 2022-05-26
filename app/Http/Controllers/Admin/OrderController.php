@@ -61,7 +61,7 @@ class OrderController extends Controller
         try {
             if(isset($id) && filter_var($id , FILTER_VALIDATE_INT)) {
                 $order = Order::Selection()->where('id' , $id)->with(['customer' => function($q){
-                    return $q->select('translation_of' , 'name' , 'client_permissions')->Abbr() ;
+                    return $q->Selection()->Abbr() ;
                 }])->with(['product_order' => function($product_order){
                     return $product_order->select('product_id' , 'order_id' , 'quantity')->with(['product' => function($product){
                         return $product->select('translation_of' , 'name' , 'pharmacist_price' , 'selling_price')->withTrashed()->Abbr();

@@ -203,27 +203,6 @@ Route::group(['middleware' => 'auth'] , function (){
 
             Route::post('delete' , [PaymentsController::class , 'delete'])->name('admin.payments.delete') ;
 
-            // Route::group(['middleware' => 'permission:orders-read'] , function(){
-            //     Route::get('/' , [OrderController::class , 'index'])->name('admin.order.index') ;
-
-            // }) ;
-            // Route::get('/search' , [OrderController::class , 'search'])->name('admin.order.search') ;
-
-
-            // Route::group(['middleware' => 'permission:orders-create'] , function(){
-            //     Route::get('/create/{TranslationOf}' , [OrderController::class , 'create'])->name('admin.order.create') ;
-            //     Route::post('/store' , [OrderController::class , 'store'])->name('admin.order.store') ;
-            // }) ;
-
-            // Route::group(['middleware' => 'permission:orders-update'] , function(){
-            //     Route::get('/edit/{id}' , [OrderController::class , 'edit'])->name('admin.order.edit') ;
-            //     Route::post('/update' , [OrderController::class , 'update'])->name('admin.order.update') ;
-            // }) ;
-
-
-            // Route::group(['middleware' => 'permission:orders-delete'] , function(){
-            //     Route::post('/delete' , [OrderController::class , 'delete'])->name('admin.order.delete') ;
-            // }) ;
         })  ;
         ///////////////////////////////////End Customers Order Route/////////////////////////////////////
 
