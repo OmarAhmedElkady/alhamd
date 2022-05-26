@@ -79,24 +79,37 @@
                                                                         <td>{{ $product->name }}</td>
                                                                         <td>{{ $product->store }}</td>
 
-                                                                        @if ($customer->client_permissions == 'pharmaceutical')
+
+                                                                        @php
+                                                                            if ($customer->client_permissions == 'pharmaceutical') {
+                                                                                $price = $product->pharmacist_price ;
+                                                                            }   elseif ($customer->client_permissions == 'customer') {
+                                                                                $price = $product->selling_price ;
+                                                                            }   else    {
+                                                                                $price = $product->ProductPriceAccordingToCustomerType ;
+                                                                            }
+                                                                        @endphp
+
+                                                                        {{-- @if ($customer->client_permissions == 'pharmaceutical')
                                                                             <td>{{ number_format($product->pharmacist_price, 2) }}</td>
                                                                         @elseif ($customer->client_permissions == 'customer')
                                                                             <td>{{ number_format($product->selling_price, 2) }}</td>
                                                                         @else
                                                                             <td>{{ number_format($product->ProductPriceAccordingToCustomerType, 2) }}</td>
-                                                                        @endif
+                                                                        @endif --}}
+
+                                                                        <td>{{ number_format($price, 2) }}</td>
 
                                                                         <td>
                                                                             <a href=""
                                                                             id="product-{{ $product->translation_of }}"
                                                                             data-name="{{ $product->name }}"
                                                                             data-id="{{ $product->translation_of }}"
-                                                                            @if (isset($product->price) && $product->price > 0)
-                                                                                    data-price="{{ $product->price }}"
-                                                                                @else
-                                                                                    data-price="{{ $product->ProductPriceAccordingToCustomerType }}"
-                                                                                @endif
+                                                                            {{-- @if (isset($price) && $price > 0) --}}
+                                                                                    data-price="{{ $price }}"
+                                                                            {{-- @else
+                                                                                data-price="{{ $product->ProductPriceAccordingToCustomerType }}"
+                                                                            @endif --}}
                                                                             class="btn btn-success btn-sm add-product-btn">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>

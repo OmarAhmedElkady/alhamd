@@ -7,12 +7,18 @@ use App\Http\Requests\Admin\PaymentRequest;
 use App\Models\customer;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PaymentsController extends Controller
 {
     public function pay($id) {
+
         try {
+
+            if (! Auth::user()->hasPermission('payment-create')) {
+                return redirect()->route('admin.customer.index') ;
+            }
 
             // Fetch customer data
             $customer = customer::selection()->TranslationOf($id)->first() ;
@@ -32,6 +38,10 @@ class PaymentsController extends Controller
 
     public function store(PaymentRequest $request)  {
         try {
+
+            if (! Auth::user()->hasPermission('payment-create')) {
+                return redirect()->route('admin.customer.index') ;
+            }
 
             $translation_of = $request->translation_of ;
             $amount = $request->amount ;
@@ -86,6 +96,11 @@ class PaymentsController extends Controller
 
     public function edit ($id)  {
         try {
+
+            if (! Auth::user()->hasPermission('payment-update')) {
+                return redirect()->route('admin.customer.index') ;
+            }
+
             if (isset($id) && filter_var($id , FILTER_VALIDATE_INT)) {
                 $payment = Payment::find($id) ;
 
@@ -105,6 +120,10 @@ class PaymentsController extends Controller
 
     public function update(PaymentRequest $request)    {
         try {
+
+            if (! Auth::user()->hasPermission('payment-update')) {
+                return redirect()->route('admin.customer.index') ;
+            }
 
             $payment_id = $request->id ;
             $editPayment = $request->amount ;
@@ -161,6 +180,10 @@ class PaymentsController extends Controller
 
     public function delete( Request $request )  {
         try {
+
+            if (! Auth::user()->hasPermission('payment-delete')) {
+                return false ;
+            }
 
             $id = $request->id ;
 

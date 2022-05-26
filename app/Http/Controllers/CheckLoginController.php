@@ -10,17 +10,7 @@ class CheckLoginController extends Controller
 
     public function CheckLogin()    {
         if (Auth::id()) {
-            // $user       = [ 'users-create' , 'users-read' , 'users-update' , 'users-delete'] ;
-            // $customers       = [ 'customers-create' , 'customers-read' , 'customers-update' , 'customers-delete'] ;
-            // $categories = [ 'categories-create' , 'categories-read' , 'categories-update' , 'categories-delete'] ;
-            // $products   = [ 'products-create' , 'products-read' , 'products-update' , 'products-delete'] ;
             // Auth::user()->attachRole('super_admin');
-            // Auth::user()->attachPermissions($user);
-            // Auth::user()->attachPermissions($customers);
-            // Auth::user()->attachPermissions($categories);
-            // Auth::user()->attachPermissions($products);
-
-
 
             if(Auth::user()->hasRole('super_admin'))  {
                 return redirect()->route('admin.Dashboard.index') ;

@@ -33,6 +33,7 @@ return [
     'products'              =>  'Products' ,
     'customers'             =>  'Customers' ,
     'orders'                =>  'Orders' ,
+    'payment'               =>  'customer Payment' ,
 
     'create'                =>  'Create' ,
     'update'                =>  'Update' ,

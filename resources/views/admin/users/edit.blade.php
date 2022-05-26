@@ -74,7 +74,7 @@
                             @if ( Auth::user()->hasrole('super_admin') && ! $user->hasrole('super_admin'))
                                 <div class="form-group">
                                     @php
-                                        $models = [ 'users' , 'categories' , 'products' , 'customers' , 'orders' ] ;
+                                        $models = [ 'users' , 'categories' , 'products' , 'customers' , 'orders' , 'payment' ] ;
                                         $powers = [ 'create' , 'read' , 'update' , 'delete' ] ;
                                     @endphp
 

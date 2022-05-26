@@ -33,6 +33,7 @@ return [
     'products'              =>  'المنتجات' ,
     'customers'             =>  'العملاء' ,
     'orders'                =>  'اوردر' ,
+    'payment'               =>  'أقساط العملاء' ,
 
 
     'create'                =>  'إضافه' ,

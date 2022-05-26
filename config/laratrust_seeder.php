@@ -18,6 +18,7 @@ return [
             'products'          => 'c,r,u,d',
             'customers'         => 'c,r,u,d',
             'orders'            => 'c,r,u,d',
+            'payment'           => 'c,r,u,d',
         ],
         'admin'                 =>  [] ,
     ],

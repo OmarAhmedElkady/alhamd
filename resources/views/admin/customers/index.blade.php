@@ -77,7 +77,7 @@
                                     <td>{{ number_format($customer->previous_account , 2) }}</td>
 
                                     <td>
-                                        @if ($customer->previous_account > 0)
+                                        @if ($customer->previous_account > 0 && Auth::user()->hasPermission('payment-create'))
                                             <a href="{{ route('admin.payments.create' , $customer->translation_of) }}" class="btn btn-success">{{ __('customers.pay_sum') }}</a>
                                         @else
                                             <button class="btn btn-success disabled">{{ __('customers.pay_sum') }}</button>
@@ -258,7 +258,8 @@
 
                                             tableRow += '<td>'+ $.number( value.previous_account , 2)+'</td>' ;
 
-                                            if (value.previous_account > 0) {
+                                            var paymentCreate = "{{ Auth::user()->hasPermission('payment-create') }}"
+                                            if (value.previous_account > 0 && paymentCreate) {
                                                 tableRow += '<td><a href="' + URLprevious_account + '" class="btn btn-success">{{ __('customers.pay_sum') }}</a></td>' ;
                                             }  else    {
                                                 tableRow += '<td><button class="btn btn-success disabled">{{ __('customers.pay_sum') }}</button></td>' ;

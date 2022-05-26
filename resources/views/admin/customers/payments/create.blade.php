@@ -86,11 +86,21 @@
 
                                         <td>
                                             {{-- @if (Auth::user()->hasrole('super_admin')) --}}
-                                                <a href="{{route('admin.payments.edit' , $payment->id)}}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> {{__('customers.edit')}}</a>
+                                                @if (Auth::user()->hasPermission('payment-update'))
+                                                    <a href="{{route('admin.payments.edit' , $payment->id)}}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> {{__('customers.edit')}}</a>
+                                                @else
+                                                    <button class="btn btn-info btn-sm disabled"><i class="fa fa-edit"></i> {{__('customers.edit')}}</button>
+                                                @endif
+
+                                                @if (Auth::user()->hasPermission('payment-delete'))
+                                                    <a href="" class="btn btn-danger btn-sm delete_payment" payment_id="{{$payment->id}}" ><i class="fa fa-trash"></i> {{__('customers.delete')}}</a>
+                                                @else
+                                                    <button class="btn btn-danger btn-sm disabled"><i class="fa fa-trash"></i> {{__('customers.delete')}}</button>
+                                                @endif
                                                 {{-- @if ($language->abbr == get_default_language())
                                                     <button class="btn btn-danger btn-sm disabled"><i class="fa fa-trash"></i> {{__('language.delete')}}</button>
                                                 @else --}}
-                                                    <a href="" class="btn btn-danger btn-sm delete_payment" payment_id="{{$payment->id}}" ><i class="fa fa-trash"></i> {{__('customers.delete')}}</a>
+
                                                 {{-- @endif --}}
 
 

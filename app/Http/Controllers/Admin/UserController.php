@@ -106,6 +106,10 @@ class UserController extends Controller
                     $permission = $permission->merge($request->orders) ;
                 }
 
+                if ($request->has('payment')) {
+                    $permission = $permission->merge($request->payment) ;
+                }
+
                 // If permissions have been added to the new admin
                 if ($permission->count() > 0) {
                     $user->syncPermissions($permission);
@@ -201,6 +205,10 @@ class UserController extends Controller
 
                 if ($request->has('orders')) {
                     $permission = $permission->merge($request->orders) ;
+                }
+
+                if ($request->has('payment')) {
+                    $permission = $permission->merge($request->payment) ;
                 }
 
                 if ($permission->count() > 0) {     //  If the user has permissions

@@ -402,6 +402,8 @@ class OrderController extends Controller
                         // Modify the customer's total account
                         $oldPrice = $order->total_price;
                         $payment = ($customer->previous_account - $oldPrice ) + $total_price ;
+                        $payment = $payment <= 0 ? 0 : $payment ;
+
                         customer::where('translation_of' , $request->client_id)->update(['previous_account' => $payment]) ;
 
 
@@ -448,6 +450,8 @@ class OrderController extends Controller
 
                         // Delete the invoice value from the customer's total account
                         $total_price =  $order->customer->previous_account - $order->total_price;
+
+                        $total_price = $total_price <= 0 ? $total_price = 0 : $total_price ;
 
                         // Modify the customer's total account
                         customer::where('translation_of' , $customer_id)->update(['previous_account' => $total_price]) ;
