@@ -89,7 +89,12 @@
                 </div>
             </div>
 
-            {{-- paidAndUnpaidAmountStatistics --}}
+            <div style="margin-top:100px">
+                <h4 style="text-align: center;">{{ __('dashboard.profit_ratio_from_the_pharmacist_and_the_public') }}</h4>
+                <div style="width:100%; margin:auto;">
+                    {!! $profitRatioFromThePharmacistAndThePublic->render() !!}
+                </div>
+            </div>
 
             <div style="width:100%; margin-top:100px ; background-color:#aee; padding: 20px 0px;">
                 <h4 style="text-align: center;">{{ __('dashboard.percentage_of_paid_and_unpaid_amount') }}</h4>
@@ -98,7 +103,6 @@
                 </div>
             </div>
 
-            <div style="height: 1000px"></div>
         </section><!-- end of content -->
 
     </div><!-- end of content wrapper -->

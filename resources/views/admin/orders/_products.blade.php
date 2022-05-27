@@ -101,16 +101,16 @@
         <table class="table table-hover table-bordered" id="footer" style="display: none">
             <tbody >
                 <tr>
-                    <td>عدد الاصناف</td>
+                    <td>{{ __('order.number_of_items') }}</td>
                     <td>{{ $order->product_order->count() }}</td>
 
-                    <td>صافى الفاتوره</td>
+                    <td>{{ __('order.net_bill') }}</td>
                     <td>{{ number_format($order->total_price ,2) }}</td>
 
-                    <td>الحساب السابق</td>
+                    <td>{{ __('order.previous_account') }}</td>
                     <td>{{ number_format($order->customer->previous_account - $order->total_price , 2) }}</td>
 
-                    <td>الإجمالى</td>
+                    <td>{{ __('order.total') }}</td>
                     <td>{{ number_format( $order->customer->previous_account  , 2) }}</td>
                 </tr>
             </tbody>

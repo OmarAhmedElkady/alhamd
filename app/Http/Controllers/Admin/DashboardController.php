@@ -62,6 +62,50 @@ class DashboardController extends Controller
 
 
 
+
+
+        $purchasing_price = Product::Abbr()->get()->sum(function($t){
+            return $t->purchasing_price * $t->store ;
+        }) ;
+
+        $pharmacist_price = Product::Abbr()->get()->sum(function($t){
+            return $t->pharmacist_price * $t->store ;
+        }) ;
+
+        $selling_price = Product::Abbr()->get()->sum(function($t){
+            return $t->selling_price * $t->store ;
+        }) ;
+
+        $totalProfitFromThePharmacist = $pharmacist_price - $purchasing_price ;
+        $totalProfitFromThePharmacist = number_format(( $totalProfitFromThePharmacist * 100 ) / $purchasing_price , 1);
+
+        $totalProfitFromTheAudience = $selling_price - $purchasing_price ;
+        $totalProfitFromTheAudience = number_format(( $totalProfitFromTheAudience * 100 ) / $purchasing_price , 1);
+
+        $profitRatioFromThePharmacistAndThePublic = app()->chartjs
+                ->name('barChartTest')
+                ->type('bar')
+                ->size(['width' => 400, 'height' => 200])
+                ->labels([ __('dashboard.total_profit_from_the_pharmacist') . $pharmacist_price - $purchasing_price  , __('dashboard.total_profit_from_the_audience') . $selling_price - $purchasing_price  ])
+                ->datasets([
+                    [
+                        "label" => __('dashboard.percentage') ,
+                        'backgroundColor' => [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'],
+                            'data' => [$totalProfitFromThePharmacist , $totalProfitFromTheAudience , 0]
+                    ],
+                ])
+                ->options([]);
+
+
+
+
+
         $totalOrders = Order::sum('total_price') ;
 
         $amountPaid = Payment::sum('payment') ;
@@ -87,6 +131,6 @@ class DashboardController extends Controller
 
 
 
-        return view('admin.dashboard.index' , compact('categories_count', 'products_count', 'customers_count', 'users_count' , 'chartjs' , 'paidAndUnpaidAmountStatistics')) ;
+        return view('admin.dashboard.index' , compact('categories_count', 'products_count', 'customers_count', 'users_count' , 'chartjs' , 'profitRatioFromThePharmacistAndThePublic' , 'paidAndUnpaidAmountStatistics' )) ;
     }
 }

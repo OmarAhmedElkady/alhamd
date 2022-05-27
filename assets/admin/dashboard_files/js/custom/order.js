@@ -96,6 +96,12 @@ $(document).ready(function () {
     //print order
     $(document).on('click', '.print-btn', function() {
 
+        $("#header").show() ;
+        $("#footer").show() ;
+        $("#Company_Address").show() ;
+
+        $('#print-area').css('overflow' , 'hidden') ;
+
         $('#print-area').printThis();
 
     });//end of click function

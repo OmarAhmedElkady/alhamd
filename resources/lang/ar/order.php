@@ -75,6 +75,10 @@ return [
     'total_product_price'       =>   'الإجمالى' ,
     'print'                     =>  ' طباعه ' ,
     'connect_with_us'           =>  'تواصل معنا ...' ,
+    'number_of_items'           =>  'عدد الاصناف' ,
+    'net_bill'                  =>  'صافى الفاتوره',
+    'previous_account'          =>  'الحساب السابق' ,
+    'total'                     =>  'الإجمالى' ,
     'Company_Address'           =>  'العنوان صول بجوار كوبرى ابو غيث' ,
 
 

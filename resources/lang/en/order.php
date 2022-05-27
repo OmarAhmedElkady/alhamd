@@ -75,6 +75,10 @@ return [
     'total_product_price'       =>   'Total' ,
     'print'                     =>  ' Print ' ,
     'connect_with_us'           =>  'Connect With Us ...' ,
+    'number_of_items'           =>  'Number Of Items' ,
+    'net_bill'                  =>  'Net Bill',
+    'previous_account'          =>  'Previous Account' ,
+    'total'                     =>  'Total' ,
     'Company_Address'           =>  'Address: Soul, next to Abu Ghaith Bridge' ,
 
 
