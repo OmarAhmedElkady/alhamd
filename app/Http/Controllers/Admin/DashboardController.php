@@ -86,7 +86,7 @@ class DashboardController extends Controller
                 ->name('barChartTest')
                 ->type('bar')
                 ->size(['width' => 400, 'height' => 200])
-                ->labels([ __('dashboard.total_profit_from_the_pharmacist') . $pharmacist_price - $purchasing_price  , __('dashboard.total_profit_from_the_audience') . $selling_price - $purchasing_price  ])
+                ->labels([ __('dashboard.total_profit_from_the_pharmacist') . number_format($pharmacist_price - $purchasing_price ,2) , __('dashboard.total_profit_from_the_audience') . number_format($selling_price - $purchasing_price ,2)  ])
                 ->datasets([
                     [
                         "label" => __('dashboard.percentage') ,

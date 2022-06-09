@@ -34,10 +34,10 @@
                         <form action="{{ route('login') }}" method="POST" class="login-form">
                             @csrf
                             <div class="form-group">
-                                <input type="email" name="email" class="form-control rounded-left" placeholder="الإيميل" required>
+                                <input type="email" name="email" class="form-control rounded-left" placeholder="الإيميل" value="ahmed@gmail.com" required>
                             </div>
                             <div class="form-group d-flex">
-                                <input type="password" name="password" class="form-control rounded-left" placeholder="كلمه المرور" required>
+                                <input type="password" name="password" class="form-control rounded-left" placeholder="كلمه المرور" value="2022" required>
                             </div>
                             <div class="form-group d-md-flex">
                                 {{-- <div>
